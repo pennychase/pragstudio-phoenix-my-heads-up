@@ -31,6 +31,11 @@ defmodule MyHeadsUpWeb.EffortLive do
           {@responders * @minutes_per_responder}
         </div>
       </section>
+
+      <form phx-submit="recalculate">
+        <label>Minutes Per Responder:</label>
+        <input type="number" name="minutes_per_responder" value={@minutes_per_responder} />
+      </form>
     </div>
     """
   end
@@ -39,6 +44,12 @@ defmodule MyHeadsUpWeb.EffortLive do
     # IO.inspect(self(), label: "ADD")
 
     socket = update(socket, :responders, &(&1 + String.to_integer(quantity)))
+
+    {:noreply, socket}
+  end
+
+  def handle_event("recalculate", %{"minutes_per_responder" => minutes_per_responder}, socket) do
+    socket = assign(socket, :minutes_per_responder, String.to_integer(minutes_per_responder))
 
     {:noreply, socket}
   end
