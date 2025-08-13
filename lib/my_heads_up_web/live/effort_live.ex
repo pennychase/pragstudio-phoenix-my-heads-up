@@ -4,9 +4,9 @@ defmodule MyHeadsUpWeb.EffortLive do
   def mount(_params, _session, socket) do
     # IO.inspect(self(), label: "MOUNT")
 
-    if connected?(socket) do
-      Process.send_after(self(), :tick, 2000)
-    end
+    # if connected?(socket) do
+    #   Process.send_after(self(), :tick, 2000)
+    # end
 
     socket = assign(socket, responders: 0, minutes_per_responder: 10)
 
