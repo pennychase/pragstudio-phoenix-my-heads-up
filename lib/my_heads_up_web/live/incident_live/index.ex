@@ -5,7 +5,7 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
   import MyHeadsUpWeb.CustomComponents
 
   def mount(_params, _session, socket) do
-    socket = assign(socket, :incidents, Incidents.list_incidents())
+    socket = assign(socket, :incidents, Incidents.list_incidents()) |> assign(:page_title, "Incidents")
 
     {:ok, socket}
   end

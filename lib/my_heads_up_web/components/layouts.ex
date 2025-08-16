@@ -37,9 +37,8 @@ defmodule MyHeadsUpWeb.Layouts do
     ~H"""
     <header class="navbar px-4 sm:px-6 lg:px-8">
       <div class="flex-1">
-        <a href="/" class="flex-1 flex w-fit items-center gap-2">
-          <img src={~p"/images/logo.svg"} width="36" />
-          <span class="text-sm font-semibold">v{Application.spec(:phoenix, :vsn)}</span>
+        <a href="/incidents" class="flex-1 flex w-fit items-center gap-2">
+          <img src={~p"/images/heads-up-logo.png"} width="175" />
         </a>
       </div>
       <div class="flex-none">
@@ -62,8 +61,8 @@ defmodule MyHeadsUpWeb.Layouts do
       </div>
     </header>
 
-    <main class="px-4 py-20 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-2xl space-y-4">
+    <main class="px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-4xl space-y-4">
         {render_slot(@inner_block)}
       </div>
     </main>
