@@ -45,6 +45,7 @@ defmodule MyHeadsUpWeb.IncidentLive.Show do
           <.urgent_incidents incidents={@urgent_incidents} />
         </div>
       </div>
+        <.back navigate={~p"/incidents"}>All Incidents</.back>
     </div>
     """
   end
