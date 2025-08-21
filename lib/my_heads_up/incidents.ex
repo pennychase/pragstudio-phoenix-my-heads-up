@@ -1,12 +1,10 @@
-defmodule MyHeadsUp.Incident do
-  defstruct [:id, :name, :description, :priority, :status, :image_path] 
-end
-
 defmodule MyHeadsUp.Incidents do
+
+  alias MyHeadsUp.Incidents.Incident
   
   def list_incidents do
     [
-      %MyHeadsUp.Incident {
+      %Incident {
         id: 1,
         name: "Lost Dog",
         description: "A friendly dog is wandering around the neighborhood. 🐶",
@@ -14,7 +12,7 @@ defmodule MyHeadsUp.Incidents do
         status: :pending,
         image_path: "/images/lost-dog.jpg"
       },
-      %MyHeadsUp.Incident {
+      %Incident {
         id: 2,
         name: "Flat Tire",
         description: "Our beloved ice cream truck has a flat tire! 🛞",
@@ -22,7 +20,7 @@ defmodule MyHeadsUp.Incidents do
         status: :resolved,
         image_path: "/images/flat-tire.jpg"
       },
-      %MyHeadsUp.Incident {
+      %Incident {
         id: 3,
         name: "Bear in the Trash",
         description: "A curious bear is digging through the trash! 🐻",

@@ -27,7 +27,7 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
     """
   end
 
-  attr :incident, MyHeadsUp.Incident, required: true
+  attr :incident, MyHeadsUp.Incidents.Incident, required: true
 
   def incident_card(assigns) do
     ~H"""
