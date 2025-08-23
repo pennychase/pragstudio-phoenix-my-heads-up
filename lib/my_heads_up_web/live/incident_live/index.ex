@@ -5,7 +5,8 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
   import MyHeadsUpWeb.CustomComponents
 
   def mount(_params, _session, socket) do
-    socket = stream(socket, :incidents, Incidents.list_incidents()) |> assign(:page_title, "Incidents")
+#    socket = stream(socket, :incidents, Incidents.list_incidents()) |> assign(:page_title, "Incidents")
+    socket = stream(socket, :incidents, Incidents.filter_incidents()) |> assign(:page_title, "Incidents")
 
     # To show incidents not held in memory when using streams
     #
