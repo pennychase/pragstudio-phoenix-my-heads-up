@@ -5,7 +5,18 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
   import MyHeadsUpWeb.CustomComponents
 
   def mount(_params, _session, socket) do
-    socket = assign(socket, :incidents, Incidents.list_incidents()) |> assign(:page_title, "Incidents")
+    socket = stream(socket, :incidents, Incidents.list_incidents()) |> assign(:page_title, "Incidents")
+
+    # To show incidents not held in memory when using streams
+    #
+    # IO.inspect(socket.assigns.streams.incidents, label: "MOUNT")
+
+    # socket =
+    #   attach_hook(socket, :log_stream, :after_render, fn
+    #     socket ->
+    #       IO.inspect(socket.assigns.streams.incidents, label: "AFTER RENDER")
+    #       socket
+    #   end)
 
     {:ok, socket}
   end
@@ -20,18 +31,19 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
           Thanks for pitching in! {vibe}
         </:tagline>
       </.headline>
-      <div class="incidents">
-        <.incident_card :for={incident <- @incidents} incident={incident} />
+      <div class="incidents" id="incidents" phx-update="stream">
+        <.incident_card :for={{dom_id, incident} <- @streams.incidents} incident={incident}id={dom_id} />
       </div>
     </div>
     """
   end
 
   attr :incident, MyHeadsUp.Incidents.Incident, required: true
+  attr :id, :string, required: true
 
   def incident_card(assigns) do
     ~H"""
-    <.link navigate={~p"/incidents/#{@incident}"}>
+    <.link navigate={~p"/incidents/#{@incident}"} id={@id}>
       <div class="card">
         <img src={@incident.image_path} />
         <h2>{@incident.name}</h2>
