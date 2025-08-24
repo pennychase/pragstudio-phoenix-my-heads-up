@@ -5,19 +5,12 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
   import MyHeadsUpWeb.CustomComponents
 
   def mount(_params, _session, socket) do
-#    socket = stream(socket, :incidents, Incidents.list_incidents()) |> assign(:page_title, "Incidents")
-    socket = stream(socket, :incidents, Incidents.filter_incidents()) |> assign(:page_title, "Incidents")
+   socket =
+     socket
+     |> stream(:incidents, Incidents.list_incidents())
+     |> assign(:page_title, "Incidents")
+     |> assign(:form, to_form(%{}))
 
-    # To show incidents not held in memory when using streams
-    #
-    # IO.inspect(socket.assigns.streams.incidents, label: "MOUNT")
-
-    # socket =
-    #   attach_hook(socket, :log_stream, :after_render, fn
-    #     socket ->
-    #       IO.inspect(socket.assigns.streams.incidents, label: "AFTER RENDER")
-    #       socket
-    #   end)
 
     {:ok, socket}
   end
@@ -32,10 +25,35 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
           Thanks for pitching in! {vibe}
         </:tagline>
       </.headline>
+
+      <.filter_form form={@form} /> 
+
       <div class="incidents" id="incidents" phx-update="stream">
         <.incident_card :for={{dom_id, incident} <- @streams.incidents} incident={incident}id={dom_id} />
       </div>
     </div>
+    """
+  end
+
+  def filter_form(assigns) do
+    ~H"""
+    <.form for={@form}>
+      <.input field={@form[:q]} placeholder="Search..." autocomplete="off" />
+
+      <.input
+        type="select"
+        field={@form[:status]}
+        prompt="Status"
+        options={Incidents.get_values(:status)}
+      />
+
+      <.input
+        type="select"
+        field={@form[:sort_by]}
+        prompt="Sort By"
+        options={[:name, :priority]}
+      />
+    </.form>
     """
   end
 
@@ -60,6 +78,7 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
     </.link>
     """   
   end
+
 
   
 end

@@ -1,5 +1,6 @@
 defmodule MyHeadsUp.Incidents do
 
+  alias MyHeadsUp.Incidents
   alias MyHeadsUp.Incidents.Incident
   alias MyHeadsUp.Repo
   import Ecto.Query
@@ -26,6 +27,10 @@ defmodule MyHeadsUp.Incidents do
     |> limit(3)
     |> order_by(asc: :priority)
     |> Repo.all()
+  end
+
+  def get_values(field) do
+    Ecto.Enum.values(Incidents.Incident, field)
   end
 
 end
