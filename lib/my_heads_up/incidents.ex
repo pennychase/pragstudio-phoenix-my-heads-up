@@ -48,6 +48,8 @@ defmodule MyHeadsUp.Incidents do
   defp sort(query, _), do: query
 
   def urgent_incidents(incident) do
+    Process.sleep(2000)     # simulate slow query
+
     Incident
     |> where(status: :pending)
     |> where([i], i.id != ^incident.id)
