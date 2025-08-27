@@ -54,6 +54,11 @@ defmodule MyHeadsUpWeb.Layouts do
             </.link>
           </li>
           <li>
+            <.link navigate={~p"/admin/incidents"}>
+              Admin
+            </.link>
+          </li>
+          <li>
             <.theme_toggle />
           </li>
           <li>
