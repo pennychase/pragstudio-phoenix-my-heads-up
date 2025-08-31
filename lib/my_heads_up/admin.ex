@@ -20,4 +20,7 @@ defmodule MyHeadsUp.Admin do
     Incident.changeset(incident, attrs)
   end
   
+  def get_incident!(id) do
+    Repo.get!(Incident, id)
+  end
 end

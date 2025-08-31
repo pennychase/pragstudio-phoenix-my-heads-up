@@ -37,6 +37,11 @@ defmodule MyHeadsUpWeb.AdminIncidentLive.Index do
         <:col :let={{_dom_id, incident}} label="Priority">
           <%= incident.priority %>
         </:col>
+      <:action :let={{_dom_id, incident}}>
+        <.link navigate={~p"/admin/incidents/#{incident}/edit"}>
+          Edit
+        </.link>
+      </:action>
       </.table>
     </div>
     """
