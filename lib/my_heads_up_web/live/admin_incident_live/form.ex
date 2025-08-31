@@ -7,7 +7,7 @@ defmodule MyHeadsUpWeb.AdminIncidentLive.Form do
   alias MyHeadsUp.Admin
 
   def mount(_params, _session, socket) do
-    changeset = Incident.changeset(%Incident{}, %{})
+    changeset = Admin.change_incident(%Incident{})
 
     socket =
       socket
@@ -22,10 +22,10 @@ defmodule MyHeadsUpWeb.AdminIncidentLive.Form do
     <.header>
       {@page_title}
     </.header>
-    <.simple_form for={@form} id="incident-form" phx-submit="save">
+    <.simple_form for={@form} id="incident-form" phx-submit="save" phx-change="validate">
       <.input field={@form[:name]} label="Name" />
 
-      <.input field={@form[:description]} type="textarea" label="Description" />
+      <.input field={@form[:description]} type="textarea" label="Description" phx-debounce="blur" />
 
       <.input field={@form[:priority]} type="number" label="Priority" />
 
@@ -61,11 +61,14 @@ defmodule MyHeadsUpWeb.AdminIncidentLive.Form do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         socket = assign(socket, :form, to_form(changeset))
-        {:noreply, socket}
- 
-    end
+        {:noreply, socket} 
+    end 
+  end
 
- 
+  def handle_event("validate", %{"incident" => incident_params}, socket) do
+    changeset = Admin.change_incident(%Incident{}, incident_params)
+    socket = assign(socket, :form, to_form(changeset, action: :validate))
+    {:noreply, socket}
   end
 
 end
