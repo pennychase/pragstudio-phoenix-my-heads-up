@@ -59,6 +59,11 @@ defmodule MyHeadsUpWeb.Layouts do
             </.link>
           </li>
           <li>
+            <.link navigate={~p"/categories"}>
+              Categories
+            </.link>
+          </li>
+          <li>
             <.theme_toggle />
           </li>
           <li>

@@ -24,30 +24,32 @@ defmodule MyHeadsUpWeb.IncidentLive.Show do
 
   def render(assigns) do
     ~H"""
-    <div class="incident-show">
-      <div class="incident">
-        <img src={@incident.image_path} />
-        <section>
-          <.badge status={@incident.status} />
-          <header>
-            <h2>{@incident.name}</h2>
-            <div class="priority">
-              {@incident.priority}
+    <Layouts.app flash={@flash}>
+      <div class="incident-show">
+        <div class="incident">
+          <img src={@incident.image_path} />
+          <section>
+            <.badge status={@incident.status} />
+            <header>
+              <h2>{@incident.name}</h2>
+              <div class="priority">
+                {@incident.priority}
+              </div>
+            </header>
+            <div class="description">
+              {@incident.description}
             </div>
-          </header>
-          <div class="description">
-            {@incident.description}
-          </div>
-        </section>
-      </div>
-      <div class="activity">
-        <div class="left"></div>
-        <div class="right">
-          <.urgent_incidents incidents={@urgent_incidents} />
+          </section>
         </div>
+        <div class="activity">
+          <div class="left"></div>
+          <div class="right">
+            <.urgent_incidents incidents={@urgent_incidents} />
+          </div>
+        </div>
+          <.back navigate={~p"/incidents"}>All Incidents</.back>
       </div>
-        <.back navigate={~p"/incidents"}>All Incidents</.back>
-    </div>
+    </Layouts.app>
     """
   end
 

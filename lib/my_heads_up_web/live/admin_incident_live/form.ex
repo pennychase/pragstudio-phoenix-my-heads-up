@@ -34,33 +34,35 @@ defmodule MyHeadsUpWeb.AdminIncidentLive.Form do
 
   def render(assigns) do
     ~H"""
-    <.header>
-      {@page_title}
-    </.header>
-    <.simple_form for={@form} id="incident-form" phx-submit="save" phx-change="validate">
-      <.input field={@form[:name]} label="Name" />
+    <Layouts.app flash={@flash}>
+      <.header>
+        {@page_title}
+      </.header>
+      <.simple_form for={@form} id="incident-form" phx-submit="save" phx-change="validate">
+        <.input field={@form[:name]} label="Name" />
 
-      <.input field={@form[:description]} type="textarea" label="Description" phx-debounce="blur" />
+        <.input field={@form[:description]} type="textarea" label="Description" phx-debounce="blur" />
 
-      <.input field={@form[:priority]} type="number" label="Priority" />
+        <.input field={@form[:priority]} type="number" label="Priority" />
 
-      <.input
-        field={@form[:status]}
-        type="select"
-        label="Status"
-        prompt="Choose a status"
-        options={[:pending , :resolved, :canceled]}
-      />
+        <.input
+          field={@form[:status]}
+          type="select"
+          label="Status"
+          prompt="Choose a status"
+          options={[:pending , :resolved, :canceled]}
+        />
 
-      <.input field={@form[:image_path]} label="Image Path" />
+        <.input field={@form[:image_path]} label="Image Path" />
 
-      <:actions>
-        <.button phx-disable-with="Saving...">Save Incident</.button>
-      </:actions>
+        <:actions>
+          <.button phx-disable-with="Saving...">Save Incident</.button>
+        </:actions>
 
-    </.simple_form>
+      </.simple_form>
 
-    <.back navigate={~p"/admin/incidents"}>Back</.back>
+      <.back navigate={~p"/admin/incidents"}>Back</.back>
+    </Layouts.app>
     """
   end
 

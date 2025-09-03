@@ -17,30 +17,32 @@ defmodule MyHeadsUpWeb.EffortLive do
     # IO.inspect(self(), label: "RENDER")
 
     ~H"""
-    <div class="effort">
-    <h1>Community Love</h1>
-      <section>
-        <button phx-click="add" phx-value-quantity="3">
-          + 3
-        </button>
-        <div>
-          {@responders}
-        </div>
-        &times;
-        <div>
-          {@minutes_per_responder}
-        </div>
-        =
-        <div>
-          {@responders * @minutes_per_responder}
-        </div>
-      </section>
+    <Layouts.app flash={@flash}>
+      <div class="effort">
+      <h1>Community Love</h1>
+        <section>
+          <button phx-click="add" phx-value-quantity="3">
+            + 3
+          </button>
+          <div>
+            {@responders}
+          </div>
+          &times;
+          <div>
+            {@minutes_per_responder}
+          </div>
+          =
+          <div>
+            {@responders * @minutes_per_responder}
+          </div>
+        </section>
 
-      <form phx-submit="recalculate">
-        <label>Minutes Per Responder:</label>
-        <input type="number" name="minutes_per_responder" value={@minutes_per_responder} />
-      </form>
-    </div>
+        <form phx-submit="recalculate">
+          <label>Minutes Per Responder:</label>
+          <input type="number" name="minutes_per_responder" value={@minutes_per_responder} />
+        </form>
+      </div>
+    </Layouts.app>
     """
   end
 

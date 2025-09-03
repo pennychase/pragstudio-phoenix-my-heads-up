@@ -20,21 +20,23 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
 
   def render(assigns) do
     ~H"""
-    <div class="incident-index">
-      <.headline>
-        <.icon name="hero-trophy-mini" />
-        25 Incidents Resolved This Month!
-        <:tagline :let={vibe}>
-          Thanks for pitching in! {vibe}
-        </:tagline>
-      </.headline>
+    <Layouts.app flash={@flash}>
+      <div class="incident-index">
+        <.headline>
+          <.icon name="hero-trophy-mini" />
+          25 Incidents Resolved This Month!
+          <:tagline :let={vibe}>
+            Thanks for pitching in! {vibe}
+          </:tagline>
+        </.headline>
 
-      <.filter_form form={@form} /> 
+        <.filter_form form={@form} /> 
 
-      <div class="incidents" id="incidents" phx-update="stream">
-        <.incident_card :for={{dom_id, incident} <- @streams.incidents} incident={incident}id={dom_id} />
+        <div class="incidents" id="incidents" phx-update="stream">
+          <.incident_card :for={{dom_id, incident} <- @streams.incidents} incident={incident}id={dom_id} />
+        </div>
       </div>
-    </div>
+    </Layouts.app>
     """
   end
 
