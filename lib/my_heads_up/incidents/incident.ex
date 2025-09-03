@@ -9,6 +9,8 @@ defmodule MyHeadsUp.Incidents.Incident do
     field :status, Ecto.Enum, values: [:pending, :resolved, :canceled], default: :pending
     field :image_path, :string, default: "images/placeholder.jpg"
 
+    belongs_to :category, MyHeadsUp.Categories.Category
+
     timestamps(type: :utc_datetime)
   end
 
