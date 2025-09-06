@@ -2,9 +2,13 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
   use MyHeadsUpWeb, :live_view
 
   alias MyHeadsUp.Incidents
+  alias MyHeadsUp.Categories
   import MyHeadsUpWeb.CustomComponents
 
   def mount(_params, _session, socket) do
+    socket =
+      assign(socket, :category_options, Categories.category_names_and_slugs())
+
     {:ok, socket}
   end
 
@@ -30,7 +34,9 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
           </:tagline>
         </.headline>
 
-        <.filter_form form={@form} /> 
+
+        <.filter_form form={@form} category_options={@category_options} />
+
 
         <div class="incidents" id="incidents" phx-update="stream">
           <.incident_card :for={{dom_id, incident} <- @streams.incidents} incident={incident}id={dom_id} />
@@ -54,12 +60,20 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
 
       <.input
         type="select"
+        field={@form[:category]}
+        prompt="Category"
+        options={@category_options}
+      />
+
+      <.input
+        type="select"
         field={@form[:sort_by]}
         prompt="Sort By"
         options={[
-          Priority: :priority,
+          Name: "name",
           "Priority High to Low": "priority_desc",
-          "Priority Low to High": "priority_asc"
+          "Priority Low to High": "priority_asc",
+          Category: "category"
           ]}
       />
 
@@ -98,7 +112,7 @@ defmodule MyHeadsUpWeb.IncidentLive.Index do
   def handle_event("filter", params, socket) do
     params =
       params
-      |> Map.take(~w(q status sort_by))
+      |> Map.take(~w(q status sort_by category))
       |> Map.reject(fn {_, v} -> v == "" end)
 
     socket = push_patch(socket, to: ~p"/incidents?#{params}")

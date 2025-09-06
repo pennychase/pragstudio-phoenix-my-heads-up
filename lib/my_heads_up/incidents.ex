@@ -18,6 +18,7 @@ defmodule MyHeadsUp.Incidents do
     Incident
     |> with_status(filter["status"])
     |> search_by(filter["q"])
+    |> with_category(filter["category"])
     |> sort(filter["sort_by"])
     |> preload(:category)
     |> Repo.all()
@@ -28,6 +29,12 @@ defmodule MyHeadsUp.Incidents do
   end 
 
   defp with_status(query, _status), do: query
+
+  defp with_category(query, slug) when slug in ["", nil], do: query
+
+  defp with_category(query, slug) do
+    from i in query, join: c in assoc(i, :category), where: c.slug == ^slug
+  end
 
   defp search_by(query, q) when q in ["", nil], do: query
 
@@ -45,6 +52,10 @@ defmodule MyHeadsUp.Incidents do
 
   defp sort(query, "priority_asc") do
     order_by(query, asc: :priority)
+  end
+
+  defp sort(query, "category") do
+    from i in query, join: c in assoc(i, :category), order_by: c.name
   end
 
   defp sort(query, _), do: query
