@@ -33,20 +33,13 @@ defmodule MyHeadsUpWeb.Router do
 
     get "/tips", TipController, :index
     get "/tips/:id", TipController, :show
+
     live "/effort", EffortLive
     live "/incidents", IncidentLive.Index
     live "/incidents/:id", IncidentLive.Show
-
-    live "/admin/incidents", AdminIncidentLive.Index
-    live "/admin/incidents/new", AdminIncidentLive.Form, :new
-    live "/admin/incidents/:id/edit", AdminIncidentLive.Form, :edit
-
-    live "/categories", CategoryLive.Index, :index
-    live "/categories/new", CategoryLive.Form, :new
-    live "/categories/:id", CategoryLive.Show, :show
-    live "/categories/:id/edit", CategoryLive.Form, :edit
-    
+      
   end
+
 
   # Other scopes may use custom stacks.
   scope "/api", MyHeadsUpWeb.Api do
@@ -84,6 +77,15 @@ defmodule MyHeadsUpWeb.Router do
       on_mount: [{MyHeadsUpWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+      
+      live "/admin/incidents", AdminIncidentLive.Index
+      live "/admin/incidents/new", AdminIncidentLive.Form, :new
+      live "/admin/incidents/:id/edit", AdminIncidentLive.Form, :edit
+
+      live "/categories", CategoryLive.Index, :index
+      live "/categories/new", CategoryLive.Form, :new
+      live "/categories/:id", CategoryLive.Show, :show
+      live "/categories/:id/edit", CategoryLive.Form, :edit
     end
 
     post "/users/update-password", UserSessionController, :update_password
