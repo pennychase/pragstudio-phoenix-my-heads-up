@@ -4,6 +4,7 @@ defmodule MyHeadsUp.Accounts.User do
 
   schema "users" do
     field :email, :string
+    field :username, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
@@ -54,6 +55,25 @@ defmodule MyHeadsUp.Accounts.User do
     else
       changeset
     end
+  end
+
+  @doc """
+  A user changeset for registering username
+  """
+
+  def username_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:username])
+    |> validate_username()
+  end
+
+ defp validate_username(changeset) do
+    changeset
+    |> validate_required([:username])
+    |> validate_length(:username, min: 2, max: 25)
+    |> validate_format(:username, ~r/^[a-zA-Z0-9_-]+$/)
+    |> unsafe_validate_unique(:username, MyHeadsUp.Repo)
+    |> unique_constraint(:username)
   end
 
   @doc """

@@ -77,6 +77,7 @@ defmodule MyHeadsUp.Accounts do
   def register_user(attrs) do
     %User{}
     |> User.email_changeset(attrs)
+    |> User.username_changeset(attrs)
     |> Repo.insert()
   end
 
@@ -95,6 +96,13 @@ defmodule MyHeadsUp.Accounts do
   end
 
   def sudo_mode?(_user, _minutes), do: false
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for changing the username.
+  """
+  def change_username(user, attrs \\ %{}, opts \\ []) do
+    User.username_changeset(user, attrs, opts)
+  end
 
   @doc """
   Returns an `%Ecto.Changeset{}` for changing the user email.
