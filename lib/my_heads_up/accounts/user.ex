@@ -5,6 +5,7 @@ defmodule MyHeadsUp.Accounts.User do
   schema "users" do
     field :email, :string
     field :username, :string
+    field :is_admin, :boolean, default: true
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime

@@ -87,7 +87,10 @@ defmodule MyHeadsUpWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :admins,
-      on_mount: [{MyHeadsUpWeb.UserAuth, :require_sudo_mode}] do
+      on_mount: [
+        {MyHeadsUpWeb.UserAuth, :require_authenticated},
+        {MyHeadsUpWeb.UserAuth, :ensure_admin}
+      ] do
 
       live "/admin/incidents", AdminIncidentLive.Index, :index
       live "/admin/incidents/new", AdminIncidentLive.Form, :new

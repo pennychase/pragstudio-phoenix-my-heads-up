@@ -56,7 +56,7 @@ defmodule MyHeadsUpWeb.UserAuth do
     conn
     |> renew_session(nil)
     |> delete_resp_cookie(@remember_me_cookie)
-    |> redirect(to: ~p"/incidents")
+    |> redirect(to: ~p"/")
   end
 
   @doc """
@@ -245,6 +245,19 @@ defmodule MyHeadsUpWeb.UserAuth do
     end
   end
 
+  def on_mount(:ensure_admin, _params, _session, socket) do
+    if socket.assigns.current_scope.user.is_admin do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(:error, "Only admins allowed!")
+        |> Phoenix.LiveView.redirect(to: ~p"/")
+
+      {:halt, socket}
+    end
+  end
+
   defp mount_current_scope(socket, session) do
     Phoenix.Component.assign_new(socket, :current_scope, fn ->
       {user, _} =
@@ -263,6 +276,21 @@ defmodule MyHeadsUpWeb.UserAuth do
   end
 
   def signed_in_path(_), do: ~p"/"
+
+  @doc """
+  Plug for routes that require the user to be an admin.
+  """
+  def require_admin(conn, _opts) do
+    if conn.assigns.current_scope && conn.assigns.current_scope.user.is_admin do
+      conn
+    else
+      conn
+      |> put_flash(:error, "Only admins allowed!")
+      |> maybe_store_return_to()
+      |> redirect(to: ~p"/")
+      |> halt()
+    end
+  end
 
   @doc """
   Plug for routes that require the user to be authenticated.
