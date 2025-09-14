@@ -2,6 +2,7 @@ defmodule MyHeadsUpWeb.Router do
   use MyHeadsUpWeb, :router
 
   import MyHeadsUpWeb.UserAuth
+  import MyHeadsUp.Accounts
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -77,8 +78,18 @@ defmodule MyHeadsUpWeb.Router do
       on_mount: [{MyHeadsUpWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
-      
-      live "/admin/incidents", AdminIncidentLive.Index
+    end
+
+    post "/users/update-password", UserSessionController, :update_password
+  end
+
+  scope "/", MyHeadsUpWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live_session :admins,
+      on_mount: [{MyHeadsUpWeb.UserAuth, :require_sudo_mode}] do
+
+      live "/admin/incidents", AdminIncidentLive.Index, :index
       live "/admin/incidents/new", AdminIncidentLive.Form, :new
       live "/admin/incidents/:id/edit", AdminIncidentLive.Form, :edit
 
@@ -87,9 +98,8 @@ defmodule MyHeadsUpWeb.Router do
       live "/categories/:id", CategoryLive.Show, :show
       live "/categories/:id/edit", CategoryLive.Form, :edit
     end
-
-    post "/users/update-password", UserSessionController, :update_password
   end
+
 
   scope "/", MyHeadsUpWeb do
     pipe_through [:browser]
