@@ -29,7 +29,7 @@ defmodule MyHeadsUpWeb.AdminIncidentLive.Index do
           Toggle Joke
         </.button>
         <div id="joke" class="joke hidden" phx-click={JS.toggle_class("animate-bounce")}>
-          Why shouldn't you trust trees?
+          Why shouldn't you trust trees, {@current_scope.user.username}?
         </div>
         <.header>
           <:actions>

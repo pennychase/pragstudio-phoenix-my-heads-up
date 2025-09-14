@@ -56,7 +56,7 @@ defmodule MyHeadsUpWeb.UserAuth do
     conn
     |> renew_session(nil)
     |> delete_resp_cookie(@remember_me_cookie)
-    |> redirect(to: ~p"/")
+    |> redirect(to: ~p"/incidents")
   end
 
   @doc """
