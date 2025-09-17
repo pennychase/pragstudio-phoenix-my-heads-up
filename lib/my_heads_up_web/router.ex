@@ -24,7 +24,7 @@ defmodule MyHeadsUpWeb.Router do
 
     conn = assign(conn, :answer, answer)
 
-    # IO.inspect(conn)
+    IO.inspect(conn)
   end
 
   scope "/", MyHeadsUpWeb do

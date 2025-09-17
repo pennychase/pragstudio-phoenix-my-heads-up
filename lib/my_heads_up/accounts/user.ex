@@ -11,6 +11,8 @@ defmodule MyHeadsUp.Accounts.User do
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
 
+    has_many :responses, MyHeadsUp.Responses.Response
+
     timestamps(type: :utc_datetime)
   end
 

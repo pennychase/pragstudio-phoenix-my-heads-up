@@ -10,6 +10,7 @@ defmodule MyHeadsUp.Incidents.Incident do
     field :image_path, :string, default: "images/placeholder.jpg"
 
     belongs_to :category, MyHeadsUp.Categories.Category
+    has_many :users, MyHeadsUp.Accounts.User
 
     timestamps(type: :utc_datetime)
   end
