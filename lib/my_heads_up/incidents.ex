@@ -75,4 +75,12 @@ defmodule MyHeadsUp.Incidents do
     Ecto.Enum.values(Incidents.Incident, field)
   end
 
+  def list_responses(incident) do
+    incident
+    |> Ecto.assoc(:responses)
+    |> preload(:user)
+    |> order_by(desc: :inserted_at)
+    |> Repo.all()
+  end
+
 end
