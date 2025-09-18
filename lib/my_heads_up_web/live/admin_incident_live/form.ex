@@ -90,8 +90,7 @@ defmodule MyHeadsUpWeb.AdminIncidentLive.Form do
         socket = 
           socket
           |> put_flash(:info, "Incident created successfully!")
-          |> redirect(to: ~p"/admin/incidents")
-          # |> push_navigate(to: ~p"/admin/incidents")
+          |> push_navigate(to: ~p"/admin/incidents")
           {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -107,7 +106,6 @@ defmodule MyHeadsUpWeb.AdminIncidentLive.Form do
           socket
           |> put_flash(:info, "Incident updated successfully!")
           |> redirect(to: ~p"/admin/incidents")
-          # |> push_navigate(to: ~p"/admin/incidents")
 
         {:noreply, socket}
 

@@ -84,7 +84,7 @@ defmodule MyHeadsUpWeb.IncidentLive.Show do
             <div id="responses" phx-update="stream">
               <.response :for={{dom_id, response} <- @streams.responses} response={response} id={dom_id} />
             </div>
-            </div>
+          </div>
           <div class="right">
             <.urgent_incidents incidents={@urgent_incidents} />
           </div>
@@ -169,6 +169,7 @@ defmodule MyHeadsUpWeb.IncidentLive.Show do
           |> assign(:form, to_form(changeset))
           |> stream_insert(:responses, response, at: 0)
           |> update(:response_count, &(&1 + 1))
+          |> push_navigate(to: ~p"/incidents/#{incident.id}")
 
         {:noreply, socket}
 
