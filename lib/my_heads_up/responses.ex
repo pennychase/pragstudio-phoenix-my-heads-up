@@ -7,6 +7,7 @@ defmodule MyHeadsUp.Responses do
   alias MyHeadsUp.Repo
 
   alias MyHeadsUp.Responses.Response
+  alias MyHeadsUp.Incidents
   alias MyHeadsUp.Incidents.Incident
   alias MyHeadsUp.Accounts.Scope
   alias MyHeadsUp.Accounts.User
@@ -80,7 +81,8 @@ defmodule MyHeadsUp.Responses do
     with {:ok, response = %Response{}} <-
            %Response{incident: incident, user: scope.user}
            |> Response.changeset(attrs, scope)
-           |> Repo.insert() do
+           |> Repo.insert()
+           |> broadcast_response(incident) do
       broadcast(scope, {:created, response})
       {:ok, response}
     end
@@ -149,4 +151,12 @@ defmodule MyHeadsUp.Responses do
     Response.changeset(response, attrs, scope)
  
   end
+
+  defp broadcast_response({:ok, response}, incident) do
+    Incidents.broadcast(incident.id, {:response_created, response})
+    {:ok, response}
+  end
+
+  defp broadcast_response(error, _incident), do: error
+
 end

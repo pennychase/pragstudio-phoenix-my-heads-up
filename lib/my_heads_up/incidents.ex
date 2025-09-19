@@ -24,6 +24,14 @@ defmodule MyHeadsUp.Incidents do
     |> Repo.all()
   end 
 
+  def subscribe(incident_id) do
+    Phoenix.PubSub.subscribe(MyHeadsUp.PubSub, "incident:#{incident_id}")
+  end
+
+  def broadcast(incident_id, message) do
+    Phoenix.PubSub.broadcast(MyHeadsUp.PubSub, "incident:#{incident_id}", message)
+  end
+
   defp with_status(query, status) when status in ~w(pending resolved canceled) do
     where(query, status: ^status)
   end 
