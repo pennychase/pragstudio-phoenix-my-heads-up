@@ -11,14 +11,15 @@ defmodule MyHeadsUp.Incidents.Incident do
 
     belongs_to :category, MyHeadsUp.Categories.Category
     has_many :users, MyHeadsUp.Accounts.User
-
+    belongs_to :heroic_response, MyHeadsUp.Responses.Response
+    has_many :responses, MyHeadsUp.Responses.Response
     timestamps(type: :utc_datetime)
   end
 
   @doc false
   def changeset(incident, attrs) do
     incident
-    |> cast(attrs, [:name, :description, :priority, :status, :image_path, :category_id])
+    |> cast(attrs, [:name, :description, :priority, :status, :image_path, :category_id, :heroic_response_id])
     |> validate_required([:name, :description, :priority, :status, :image_path, :category_id])
     |> validate_length(:description, min: 10)
     |> validate_inclusion(:priority, 1..3)

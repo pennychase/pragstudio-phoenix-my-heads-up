@@ -11,7 +11,7 @@ defmodule MyHeadsUp.Incidents do
 
   def get_incident!(id) do
     Repo.get!(Incident, id)
-    |> Repo.preload(:category)
+    |> Repo.preload([:category, :heroic_response, heroic_response: :user])
   end
 
   def filter_incidents(filter) do

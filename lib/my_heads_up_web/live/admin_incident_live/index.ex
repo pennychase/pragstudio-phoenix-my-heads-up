@@ -52,6 +52,14 @@ defmodule MyHeadsUpWeb.AdminIncidentLive.Index do
           <:col :let={{_dom_id, incident}} label="Priority">
             <%= incident.priority %>
           </:col>
+          <:col :let={{_dom_id, incident}} label="Heroic Response">
+            <%= incident.heroic_response_id %>
+          </:col>
+        <:action :let={{_dom_id, incident}}>
+          <.link phx-click="draw-heroic-response" phx-value-id={incident.id}>
+            Draw Heroic Responder
+          </.link>
+        </:action>
         <:action :let={{_dom_id, incident}}>
           <.link navigate={~p"/admin/incidents/#{incident}/edit"}>
             Edit
@@ -77,6 +85,23 @@ defmodule MyHeadsUpWeb.AdminIncidentLive.Index do
 
     {:noreply, stream_delete(socket, :incidents, incident)}
 
+  end
+
+  def handle_event("draw-heroic-response", %{"id" => id}, socket) do
+    incident = Admin.get_incident!(id)
+
+    case Admin.draw_heroic_response(incident) do
+      {:ok, incident} ->
+        socket =
+          socket
+          |> put_flash(:info, "Heroic Response drawn!")
+          |> stream_insert(:incidents, incident)
+
+        {:noreply, socket}
+
+      {:error, error} ->
+        {:noreply, put_flash(socket, :error, error)}
+    end
   end
   
 end
