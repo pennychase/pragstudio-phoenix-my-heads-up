@@ -8,6 +8,13 @@ defmodule MyHeadsUp.Accounts do
 
   alias MyHeadsUp.Accounts.{User, UserToken, UserNotifier}
 
+  ## Functions for changing Admin status
+
+  # def list_users do
+  #   User
+  #   |> Repo.all()
+  # end 
+
   ## Database getters
 
   @doc """

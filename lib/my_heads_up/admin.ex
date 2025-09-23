@@ -1,8 +1,12 @@
 defmodule MyHeadsUp.Admin do
+  alias Hex.API.User
   alias MyHeadsUp.Incidents
   alias MyHeadsUp.Incidents.Incident
+  alias MyHeadsUp.Accounts.User
   alias MyHeadsUp.Repo
   import Ecto.Query
+
+  ## Admin Incidents
 
   def get_incident!(id) do
     Repo.get!(Incident, id)
@@ -38,11 +42,11 @@ defmodule MyHeadsUp.Admin do
 
   end
 
-  def delete_incident(%Incident{} =incident) do
+  def delete_incident(%Incident{} = incident) do
     Repo.delete(incident)
   end
 
-  def draw_heroic_response(%Incident{status: :resolved} =incident) do
+  def draw_heroic_response(%Incident{status: :resolved} = incident) do
     incident = Repo.preload(incident, :responses)
 
     case incident.responses do
@@ -58,6 +62,32 @@ defmodule MyHeadsUp.Admin do
 
   def draw_heroic_response(%Incident{}) do
     {:error, "Incident must be respolved to draw a heroic response!"}
+  end
+
+  ## Admin Users
+
+  def get_user!(id) do
+    Repo.get!(User, id)
+  end
+
+  def list_users do
+    User
+    |> Repo.all()
+  end 
+
+  def update_user(%User{} = user, attrs) do
+    user
+    |> User.is_admin_changeset(attrs)
+    |> Repo.update()
+  end
+
+  def toggle_admin_status(user, current_user) do
+    if user.id == current_user.id do
+      {:error, "Can't change your own admin status!"}
+    else
+      {:ok, _user} = update_user(user, %{is_admin: !user.is_admin})
+    end
+       
   end
 
 end

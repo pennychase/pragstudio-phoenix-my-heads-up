@@ -96,6 +96,7 @@ defmodule MyHeadsUpWeb.Router do
       live "/admin/incidents", AdminIncidentLive.Index, :index
       live "/admin/incidents/new", AdminIncidentLive.Form, :new
       live "/admin/incidents/:id/edit", AdminIncidentLive.Form, :edit
+      live "/admin/users", AdminUserLive.Index, :index  
 
       live "/categories", CategoryLive.Index, :index
       live "/categories/new", CategoryLive.Form, :new
