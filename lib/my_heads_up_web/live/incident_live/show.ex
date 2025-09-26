@@ -19,19 +19,15 @@ defmodule MyHeadsUpWeb.IncidentLive.Show do
 
   def handle_params(%{"id" => id}, _uri, socket) do
 
-    # if (socket.assigns.current_scope) do
-    #   current_user = socket.assigns.current_scope.user
-    # end
     %{current_scope: current_scope} = socket.assigns
 
     if connected?(socket) do
       Incidents.subscribe(id)
 
       if current_scope do
-        {:ok, _} =
-          Presence.track(self(), topic(id), current_scope.user.username, %{
-            online_at: System.system_time(:second)
-          })
+        Presence.track_user(id, current_scope.user)
+
+        Presence.subscribe(id)
       end
     end
 
@@ -39,11 +35,7 @@ defmodule MyHeadsUpWeb.IncidentLive.Show do
 
     responses = Incidents.list_responses(incident)
 
-    presences =
-      Presence.list(topic(id))
-      |> Enum.map(fn {username, %{metas: metas}} ->
-        %{id: username, metas: metas}
-      end)
+    presences = Presence.list_users(id)
 
     socket =
       socket
@@ -242,6 +234,18 @@ defmodule MyHeadsUpWeb.IncidentLive.Show do
 
   def handle_info({:incident_updated, incident}, socket) do
     {:noreply, assign(socket, :incident, incident)}
+  end
+
+  def handle_info({:user_joined, presence}, socket) do
+    {:noreply, stream_insert(socket, :presences, presence)}
+  end
+
+  def handle_info({:user_left, presence}, socket) do
+    if presence.metas == [] do
+      {:noreply, stream_delete(socket, :presences, presence)}
+    else
+      {:noreply, stream_insert(socket, :presences, presence)}
+    end
   end
   
 end
