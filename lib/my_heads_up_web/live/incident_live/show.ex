@@ -5,6 +5,7 @@ defmodule MyHeadsUpWeb.IncidentLive.Show do
   alias MyHeadsUp.Incidents
   alias MyHeadsUp.Responses
   alias MyHeadsUp.Responses.Response
+  alias MyHeadsUpWeb.Presence
   import MyHeadsUpWeb.CustomComponents
 
   on_mount {MyHeadsUpWeb.UserAuth, :mount_current_scope}
@@ -18,24 +19,47 @@ defmodule MyHeadsUpWeb.IncidentLive.Show do
 
   def handle_params(%{"id" => id}, _uri, socket) do
 
+    # if (socket.assigns.current_scope) do
+    #   current_user = socket.assigns.current_scope.user
+    # end
+    %{current_scope: current_scope} = socket.assigns
+
     if connected?(socket) do
       Incidents.subscribe(id)
+
+      if current_scope do
+        {:ok, _} =
+          Presence.track(self(), topic(id), current_scope.user.username, %{
+            online_at: System.system_time(:second)
+          })
+      end
     end
 
     incident = Incidents.get_incident!(id)
 
     responses = Incidents.list_responses(incident)
 
+    presences =
+      Presence.list(topic(id))
+      |> Enum.map(fn {username, %{metas: metas}} ->
+        %{id: username, metas: metas}
+      end)
+
     socket =
       socket
       |> assign(:incident, incident)
       |> stream(:responses, responses)
+      |> stream(:presences, presences)
       |> assign(:response_count, Enum.count(responses))
       |> assign(:page_title, incident.name)
       |> assign_async(:urgent_incidents, fn ->
          {:ok, %{urgent_incidents: Incidents.urgent_incidents(incident)}} end)
 
     {:noreply, socket}
+  end
+
+  defp topic(incident_id) do
+    "incident_onlookers:${incident_id"
   end
 
   def render(assigns) do
@@ -100,6 +124,8 @@ defmodule MyHeadsUpWeb.IncidentLive.Show do
           </div>
           <div class="right">
             <.urgent_incidents incidents={@urgent_incidents} />
+
+            <.onlookers :if={@current_scope} presences={@streams.presences} />
           </div>
         </div>
           <.back navigate={~p"/incidents"}>All Incidents</.back>
@@ -131,6 +157,20 @@ defmodule MyHeadsUpWeb.IncidentLive.Show do
           </li>
         </ul>
       </.async_result>
+    </section>
+    """
+  end
+
+  def onlookers(assigns) do
+    ~H"""
+    <section>
+      <h4>Onlookers</h4>
+      <ul class="presences" id="incident-watchers" phx-update="stream">
+        <li :for={{dom_id, %{id: username, metas: metas}} <- @presences} id={dom_id}>
+          <.icon name="hero-user-circle-solid" class="w-5 h-5" />
+          {username} ({length(metas)})
+        </li>
+      </ul>
     </section>
     """
   end

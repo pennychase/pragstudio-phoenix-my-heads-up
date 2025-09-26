@@ -12,6 +12,7 @@ defmodule MyHeadsUp.Application do
       MyHeadsUp.Repo,
       {DNSCluster, query: Application.get_env(:my_heads_up, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: MyHeadsUp.PubSub},
+      MyHeadsUpWeb.Presence,
       # Start a worker by calling: MyHeadsUp.Worker.start_link(arg)
       # {MyHeadsUp.Worker, arg},
       # Start to serve requests, typically the last entry
